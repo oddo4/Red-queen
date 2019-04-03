@@ -1,0 +1,87 @@
+﻿<Page x:Class="SpotifyAPI.Pages.PlayerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SpotifyAPI.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="350" d:DesignWidth="200">
+    <Grid Background="#101010">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0"  Margin="5,0">
+                <Label x:Name="UserNick" Content="Username" VerticalAlignment="Center" FontSize="8" Grid.Column="0"/>
+                <Label x:Name="UserType" Content="Type" VerticalAlignment="Center" FontSize="8" Grid.Column="0" Foreground="DarkGray"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1" Margin="5,0">
+                <Button x:Name="MinimalizeBtn" Style="{StaticResource ImageButtonStyle}" Width="10" Click="MinimalizeBtn_Click" Margin="5,0">
+                    <Image Source="/Image/minus.png"/>
+                </Button>
+                <Button x:Name="CloseBtn" Style="{StaticResource ImageButtonStyle}" Width="10" Click="CloseBtn_Click" Margin="5,0">
+                    <Image Source="/Image/cancel.png"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+            <Grid Background="#161616">
+                <Image Width="120" Height="120" Source="http://download.seaicons.com/icons/rade8/minium-2/256/Sidebar-Music-icon.png" Margin="0,0,15,0"/>
+            </Grid>
+            <Image x:Name="AlbumCover" Width="200" Height="200"/>
+        </Grid>
+        <Grid Grid.Row="2" HorizontalAlignment="Center" MaxWidth="200" MaxHeight="40">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock x:Name="SongName" Text="" TextAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                <TextBlock x:Name="ArtistName" Text="" TextAlignment="Center" TextWrapping="WrapWithOverflow" FontSize="10" Foreground="DarkGray"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel x:Name="FreeUserInfo" MaxWidth="200" Grid.RowSpan="2" VerticalAlignment="Center">
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=PlayerPanel, Path=IsEnabled}" Value="False">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=PlayerPanel, Path=IsEnabled}" Value="True">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBlock Text="You need to be a Premium user to use music controls." TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel x:Name="PlayerPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="True" Grid.Row="0">
+                <Button x:Name="PrevBtn" Style="{StaticResource ImageButtonStyle}" Width="30" Height="30" Click="PrevBtn_Click" IsEnabled="{Binding ElementName=PlayerPanel, Path=IsEnabled}">
+                    <Image Source="/Image/back.png"/>
+                </Button>
+                <Button x:Name="PlaybackBtn" Style="{StaticResource ImageButtonStyle}" Width="30" Height="30" Click="PlaybackBtn_Click" Margin="20,0" IsEnabled="{Binding ElementName=PlayerPanel, Path=IsEnabled}">
+                    <Image x:Name="PlaybackImg" Source="/Image/play.png"/>
+                </Button>
+                <Button x:Name="NextBtn" Style="{StaticResource ImageButtonStyle}" Width="30" Height="30" Click="NextBtn_Click" IsEnabled="{Binding ElementName=PlayerPanel, Path=IsEnabled}">
+                    <Image Source="/Image/next.png"/>
+                </Button>
+            </StackPanel>
+            <Grid x:Name="OptionsPanel" VerticalAlignment="Center" IsEnabled="{Binding ElementName=PlayerPanel, Path=IsEnabled}" Grid.Row="1">
+                <Button x:Name="ShuffleBtn" HorizontalAlignment="Left" Style="{StaticResource ImageButtonStyle}" Width="20" Height="20" Click="ShuffleBtn_Click" Margin="20,0" IsEnabled="{Binding ElementName=PlayerPanel, Path=IsEnabled}">
+                    <Image x:Name="ShuffleImg" Source="/Image/shuffle1.png"/>
+                </Button>
+                <Button x:Name="RepeatBtn" HorizontalAlignment="Right" Style="{StaticResource ImageButtonStyle}" Width="20" Height="20" Click="RepeatBtn_Click" Margin="20,0" IsEnabled="{Binding ElementName=PlayerPanel, Path=IsEnabled}">
+                    <Image x:Name="RepeatImg" Source="/Image/repeat2.png"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
