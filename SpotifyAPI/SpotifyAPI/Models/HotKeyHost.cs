@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Input;
 using System.Runtime.Serialization;
 using System.Windows.Interop;
+using SpotifyAPI.Pages;
 
 namespace SpotifyAPI.Models
 {
@@ -149,15 +150,12 @@ namespace SpotifyAPI.Models
         /// </summary>
         public event EventHandler<HotKeyEventArgs> HotKeyPressed;
 
-        protected virtual bool OnHotKeyPress()
+        protected virtual void OnHotKeyPress()
         {
             if (HotKeyPressed != null)
             {
                 HotKeyPressed(this, new HotKeyEventArgs(this));
-                return true;
             }
-
-            return false;
         }
 
         internal void RaiseOnHotKeyPressed()

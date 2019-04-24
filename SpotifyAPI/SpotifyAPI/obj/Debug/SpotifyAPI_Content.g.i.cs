@@ -8,10 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/repeat1.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/repeat2.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/repeat4.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/shuffle0.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/shuffle1.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/waldo.ico")]
 
 

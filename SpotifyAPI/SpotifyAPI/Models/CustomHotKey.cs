@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpotifyAPI.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,14 @@ namespace SpotifyAPI.Models
     [Serializable]
     public class CustomHotKey : HotKey
     {
-        public CustomHotKey(string name, Key key, ModifierKeys modifiers, bool enabled)
+        public int Option = 0;
+        public PlayerPage Player;
+
+        public CustomHotKey(string name, Key key, ModifierKeys modifiers, bool enabled, PlayerPage player)
             : base(key, modifiers, enabled)
         {
             Name = name;
+            Player = player;
         }
 
         private string name;
@@ -31,12 +36,29 @@ namespace SpotifyAPI.Models
             }
         }
 
-        /*protected override void OnHotKeyPress()
+        protected async override void OnHotKeyPress()
         {
-            MessageBox.Show(string.Format("'{0}' has been pressed ({1})", Name, this));
+            var api = SpotifyClient.GetApi();
+
+            var track = (await api.GetPlaybackAsync()).Item;
+
+            switch(Option)
+            {
+                case 1:
+                    Player.PlaybackBtn_Click(null, null);
+                    break;
+                case 2:
+                    Player.PrevBtn_Click(null, null);
+                    App.MainWindow.ShowToastWindow(track);
+                    break;
+                case 3:
+                    Player.NextBtn_Click(null, null);
+                    App.MainWindow.ShowToastWindow(track);
+                    break;
+            }
 
             base.OnHotKeyPress();
-        }*/
+        }
 
 
         protected CustomHotKey(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)

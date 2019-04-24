@@ -28,6 +28,7 @@ namespace SpotifyAPI.Pages
     {
         SpotifyWebAPI api = null;
         FullTrack currentTrack = null;
+        DispatcherTimer timer;
         public PlayerPage()
         {
             InitializeComponent();
@@ -61,9 +62,10 @@ namespace SpotifyAPI.Pages
 
             CheckTrackTimer();
 
+            CreateHotKeys();
+
             PlaybackImgSwitch();
-            ShuffleBtn_Click(null, null);
-            RepeatBtn_Click(null, null);
+            SetPlayerControls();
 
             App.MainWindow.Topmost = false;
         }
@@ -87,8 +89,8 @@ namespace SpotifyAPI.Pages
 
         public void CheckTrackTimer()
         {
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 50);
             timer.Tick += GetCurrentTrack;
             timer.Start();
         }
@@ -98,7 +100,14 @@ namespace SpotifyAPI.Pages
             SetCurrentTrack();
         }
 
-        private void PlaybackBtn_Click(object sender, RoutedEventArgs e)
+        public void CreateHotKeys()
+        {
+            App.HotKeyHost.AddHotKey(new CustomHotKey("Play/Pause", Key.M, ModifierKeys.Control | ModifierKeys.Shift, true, this) { Option = 1 });
+            App.HotKeyHost.AddHotKey(new CustomHotKey("Previous", Key.Left, ModifierKeys.Control | ModifierKeys.Shift, true, this) { Option = 2 });
+            App.HotKeyHost.AddHotKey(new CustomHotKey("Next", Key.Right, ModifierKeys.Control | ModifierKeys.Shift, true, this) { Option = 3 });
+        }
+
+        public void PlaybackBtn_Click(object sender, RoutedEventArgs e)
         {
             bool premium = SpotifyClient.GetSpotifyClient().Premium;
 
@@ -139,7 +148,7 @@ namespace SpotifyAPI.Pages
             }
         }
 
-        private void NextBtn_Click(object sender, RoutedEventArgs e)
+        public async void NextBtn_Click(object sender, RoutedEventArgs e)
         {
             bool premium = SpotifyClient.GetSpotifyClient().Premium;
 
@@ -149,7 +158,7 @@ namespace SpotifyAPI.Pages
 
                 if (device != null)
                 {
-                    var result = api.SkipPlaybackToNext(device.Id);
+                    var result = await api.SkipPlaybackToNextAsync(device.Id);
 
                     if (result.HasError())
                     {
@@ -159,7 +168,7 @@ namespace SpotifyAPI.Pages
             }
         }
 
-        private void PrevBtn_Click(object sender, RoutedEventArgs e)
+        public async void PrevBtn_Click(object sender, RoutedEventArgs e)
         {
             bool premium = SpotifyClient.GetSpotifyClient().Premium;
 
@@ -169,7 +178,7 @@ namespace SpotifyAPI.Pages
 
                 if (device != null)
                 {
-                    var result = api.SkipPlaybackToPrevious(device.Id);
+                    var result =  await api.SkipPlaybackToPreviousAsync(device.Id);
 
                     if (result.HasError())
                     {
@@ -250,7 +259,7 @@ namespace SpotifyAPI.Pages
 
         private void MinimalizeBtn_Click(object sender, RoutedEventArgs e)
         {
-            App.MainWindow.WindowState = WindowState.Minimized;
+            App.MainWindow.HideWindow();
         }
 
         private async void RepeatBtn_Click(object sender, RoutedEventArgs e)
@@ -316,6 +325,30 @@ namespace SpotifyAPI.Pages
                 {
                     Debug.WriteLine(result.Error.Status + " - " + result.Error.Message);
                 }
+            }
+        }
+
+        public async void SetPlayerControls()
+        {
+            bool premium = SpotifyClient.GetSpotifyClient().Premium;
+
+            if (premium)
+            {
+                var playback = await api.GetPlaybackAsync();
+
+                BitmapImage shuffle = new BitmapImage();
+                shuffle.BeginInit();
+                shuffle.UriSource = new Uri("pack://application:,,,/Image/shuffle" + Convert.ToInt32(playback.ShuffleState) + ".png");
+                shuffle.EndInit();
+
+                ShuffleImg.Source = shuffle;
+
+                BitmapImage repeat = new BitmapImage();
+                repeat.BeginInit();
+                repeat.UriSource = new Uri("pack://application:,,,/Image/repeat" + (int)playback.RepeatState + ".png");
+                repeat.EndInit();
+
+                RepeatImg.Source = repeat;
             }
         }
     }

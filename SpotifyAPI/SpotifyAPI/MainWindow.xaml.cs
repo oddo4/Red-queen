@@ -1,4 +1,5 @@
-﻿using SpotifyAPI.Models;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using SpotifyAPI.Models;
 using SpotifyAPI.Pages;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
@@ -34,11 +35,15 @@ namespace SpotifyAPI
         ToastWindow toastWindow;
         DispatcherTimer toastTimer;
         int ctr = 0;
+        TaskbarIcon taskIcon;
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
             this.Left = desktopWorkingArea.Right - this.Width;
             this.Top = desktopWorkingArea.Bottom - this.Height;
+
+            App.HotKeyHost = new HotKeyHost((HwndSource)HwndSource.FromVisual(App.Current.MainWindow));
         }
 
         public MainWindow()
@@ -49,6 +54,7 @@ namespace SpotifyAPI
             toastWindow = new ToastWindow();
             toastWindow.Hide();
             CreateToastTimer();
+            CreateTaskIcon();
 
             this.Topmost = true;
 
@@ -78,9 +84,35 @@ namespace SpotifyAPI
             }
         }
 
+        public void CreateTaskIcon()
+        {
+            taskIcon = new TaskbarIcon();
+            taskIcon.TrayLeftMouseDown += OpenWindow;
+
+            BitmapImage source = new BitmapImage();
+            source.BeginInit();
+            source.UriSource = new Uri("pack://application:,,,/Image/waldo.ico");
+            source.EndInit();
+
+            taskIcon.IconSource = source;
+        }
+
+        public void OpenWindow(object sender, EventArgs e)
+        {
+            this.Show();
+            this.Topmost = true;
+            this.Topmost = false;
+            this.Focus();
+        }
+
+        public void HideWindow()
+        {
+            this.Hide();
+        }
+
         public async void ShowToastWindow(FullTrack track = null)
         {
-            if (WindowState == WindowState.Minimized)
+            if (Visibility == Visibility.Hidden)
             {
                 var result = await toastWindow.SetCurrentTrack(track);
 

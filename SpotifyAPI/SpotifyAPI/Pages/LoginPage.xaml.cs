@@ -45,7 +45,7 @@ namespace SpotifyAPI.Pages
 
         private void MinimalizeBtn_Click(object sender, RoutedEventArgs e)
         {
-            App.MainWindow.WindowState = WindowState.Minimized;
+            App.MainWindow.HideWindow();
         }
     }
 }

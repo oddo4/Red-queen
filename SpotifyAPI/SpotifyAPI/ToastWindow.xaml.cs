@@ -76,7 +76,7 @@ namespace SpotifyAPI
         {
             this.Hide();
 
-            App.MainWindow.WindowState = WindowState.Normal;
+            App.MainWindow.Show();
         }
     }
 }
